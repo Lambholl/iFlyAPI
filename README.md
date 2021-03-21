@@ -89,7 +89,7 @@ def getCurrentTime():
 >>> `python -m pip install --upgrade pip`
 >> 
 >> 接着安装:
->>> `pip install Flask, requests`
+>>> `pip install Flask, requests, flask_compress, flask_cors`
 * 对于大部分页面，我们可以直接返回固定不变的json数据，这里给出一个例子(当然这个例子不完全)
 ```
 #example.py
@@ -113,7 +113,7 @@ def addLoginInfo():
     return data
 
 #jcservice/Login/clientLogin
-@app.route('/jcservice/Login/clientLogin', methods=['POST', 'GET'])
+@app.route('/jcservice/Login/clientLogin', methods=['POST'])
 def clientLogin():
     data = {
         "code":1,
@@ -136,6 +136,9 @@ if __name__ == '__main__':
     # app.run(host, port, debug, options)
     # 默认值：host='127.0.0.1', port=5000, debug=False
     app.config['JSON_AS_ASCII'] = False
-    app.run(host='0.0.0.0', port=80) #端口的话看你的服务器有哪些端口，选择能使用的端口，记得在防火墙里面开放端口，协议选择tcp。
+    app.run(host='0.0.0.0', port=8888)
+    # 端口的话看你的服务器有哪些端口，选择能使用的端口，记得在防火墙里面开放端口，协议选择tcp。
+    # 考虑到国内80端口需要备案，一般不建议使用80端口，当然请避开21 22 80 8080 433 3389
+    # 畅言作业平台的“修改域名”支持加端口，所以请放心
 ```
 ## 待续
