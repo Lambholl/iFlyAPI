@@ -74,22 +74,68 @@ def getCurrentTime():
 >> 对于还不会搭建的同学，或者想偷懒的同学，我推荐使用Python Flask
 
 ## Flask搭建思路
-* 首先，我们需要安装[Python](https://www.python.org)
-> 注意安装时的选项：
+* 首先，你需要会Python，要是你连python都不会，那就先去学python吧，不管是看纸质书还是找在线教程
+* 如果你没接触过Python，在学习教程前，请你先安装python：
+> 请去[Python官网](https://www.python.org)下载python。注意安装时的选项：
 >> ![avatar](https://github.com/Lambholl/iFlyAPI/blob/main/images/py1.png)
 >> ![avatar](https://github.com/Lambholl/iFlyAPI/blob/main/images/py2.png)
-* 接下来安装依赖:
-> 先更改默认pypi源为tuna:
-> 
->> `pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple`
+> 接下来安装依赖:
+>> 先更改默认pypi源为tuna:
 >> 
-> 如果提示升级pip可以运行:
-> 
->> `python -m pip install --upgrade`
+>>> `pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple`
+>>> 
+>> 如果提示升级pip可以运行:
 >> 
-> 接着安装:
->> `pip install Flask`
+>>> `python -m pip install --upgrade pip`
 >> 
->> `pip install requests`
+>> 接着安装:
+>>> `pip install Flask, requests`
+* 对于大部分页面，我们可以直接返回固定不变的json数据，这里给出一个例子(当然这个例子不完全)
+```
+#example.py
 
+from flask import Flask, request
+
+#实例化
+app = Flask(__name__)
+
+#定义api返回
+#jcservice/Login/addLoginInfo
+@app.route('/jcservice/Login/addLoginInfo', methods=['POST', 'GET'])
+#加入GET是为了方便用浏览器进行调试，实际使用过程中，可以把GET去掉
+def addLoginInfo():
+    #取这个函数名是为了方便辨别
+    data = {"code":1,
+        "data":None,
+        "responsetime":int(round(time.time()*1000)),
+        "msg":"请求成功！"
+    }
+    return data
+
+#jcservice/Login/clientLogin
+@app.route('/jcservice/Login/clientLogin', methods=['POST', 'GET'])
+def clientLogin():
+    data = {
+        "code":1,
+        "data":{
+            "needchange":False,
+            "schoolId":"学园都市-常盘台中学",
+            "displayName":"御坂10032号",
+            "id":requests.form['safeid'],
+            "cycoreId":"1500000100072243788",
+            "successType":"center",
+            "token":requests.form['token'],
+            "userType":2
+        },
+        "responsetime":int(round(time.time()*1000)),
+        "msg":"请求成功！"
+    }
+    return data
+
+if __name__ == '__main__':
+    # app.run(host, port, debug, options)
+    # 默认值：host='127.0.0.1', port=5000, debug=False
+    app.config['JSON_AS_ASCII'] = False
+    app.run(host='0.0.0.0', port=80) #端口的话看你的服务器有哪些端口，选择能使用的端口，记得在防火墙里面开放端口，协议选择tcp。
+```
 ## 待续
