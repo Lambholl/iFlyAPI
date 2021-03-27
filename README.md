@@ -10,7 +10,8 @@
 通过网络抓包，我们可以发现畅言作业平台传输的数据基本上都是json格式。
 
 同时，可以注意到，在登录界面有一个“修改域名”的选项。
-![avatar](https://github.com/Lambholl/iFlyAPI/blob/main/images/1.png)
+![1](https://user-images.githubusercontent.com/55140169/112722683-eefcea80-8f45-11eb-9f45-ef590a0ebc0f.png)
+
 
 通过抓包，我们可以了解到畅言作业平台请求的域名是`http://www.yixuexiao.cn`
 也就是说通过“修改域名”可以更改请求连接。
@@ -75,8 +76,9 @@ def getCurrentTime():
 * 如果你看得懂廖雪峰版本的，那么我建议你去学[廖雪峰版本的Python教程](https://www.liaoxuefeng.com/wiki/1016959663602400)，当然学习的时候注重实例的开发，比如利用[LoliconAPI](https://api.lolicon.app/#/setu?id=apikey)写几个简单的脚本对其进行调用
 * 如果你没接触过Python，在学习教程前，请你先安装python：
 > 请去[Python官网](https://www.python.org)下载python。注意安装时的选项：
->> ![avatar](https://github.com/Lambholl/iFlyAPI/blob/main/images/py1.png)
->> ![avatar](https://github.com/Lambholl/iFlyAPI/blob/main/images/py2.png)
+>> ![py1](https://user-images.githubusercontent.com/55140169/112722702-063bd800-8f46-11eb-9bc8-451f3cbe7442.png)
+>> ![py2](https://user-images.githubusercontent.com/55140169/112722713-12c03080-8f46-11eb-96b4-57f8278c273e.png)
+
 > 接下来安装依赖:
 >> 先更改默认pypi源为tuna:
 >> 
@@ -163,21 +165,7 @@ if __name__ == '__main__':
 > xlsx<br>
 * 假设你愿意把视频用ffmpeg转码成mp4，把音频用ffmpeg转码成mp3，把下载的epub文件转换成pdf，那么就可以解决绝大多数问题
 > 关于epub:<br>  建议先用<b>Neat Converter</b>转成docx，再修改字体，导出pdf，如果行间距比较大用多倍行距设置成小于1的数值，千万不要使用固定行距，否则图片排版会出大问题。字体建议选择[XHei Intel](https://github.com/Lambholl/iFlyAPI/tree/main/tools/XHei_Intel.7z)，顺便分享一下一个特别美观的等距字体（中文严格为英文两倍）[XHei Inrwl Mono](https://github.com/Lambholl/iFlyAPI/tree/main/tools/XHei_Intel-Mono.7z)
-* 为了方便维护，我建议将返回的数据另外存储到json文件中
-> 举例: <br>存放json的文件夹的结构为:
->> list.json    - 列出所有可以加载的json文件<br>
->> xx.json      - 在list.json中列出的文件名<br>
->> xxx.json <br>
->> hidden       - 定义隐藏文件和搜索功能的文件夹<br>
->>> hidden.json - 列举出所有搜索的关键词与其匹配的json文件<br>
->>> abc.json    - hidden.json中被列举但在../list.json中未被列举的json文件，保存在这里以便区分<br>
->>> de.json
->>> 
->> backup       - 备份文件夹，为了防止误删导致数据丢失，建议在别的地方多弄几个备份文件夹<br>
->>> xx.json <br>
->>> xxx.json <br>
->>> abc.json <br>
->>> de.json <br>
+* 为了方便维护，我建议将返回的数据另外存储到json文件中，下面先给出代码，稍后会讲解与之对应的json格式：
 ```
 from flask import Flask, request
 import time, os
@@ -348,4 +336,128 @@ if __name__ == '__main__':
     app.config['JSON_AS_ASCII'] = False
     app.run(host='0.0.0.0', port=30389)
 ```
-## 待续
+* ### 接下来讲解本地json的格式
+> 举例: <br>存放json的文件夹的结构为:
+>> list.json    - 列出所有可以加载的json文件<br>
+>> head.json    - 总是保持在学案顶部的json文件，方便用来发送公告类文件
+>> xx.json      - 在list.json中列出的文件名<br>
+>> xxx.json <br>
+>> hidden       - 定义隐藏文件和搜索功能的文件夹<br>
+>>> hidden.json - 列举出所有搜索的关键词与其匹配的json文件<br>
+>>> abc.json    - hidden.json中被列举但在../list.json中未被列举的json文件，保存在这里以便区分<br>
+>>> de.json
+>>> 
+>> backup       - 备份文件夹，为了防止误删导致数据丢失，建议在别的地方多弄几个备份文件夹<br>
+>>> xx.json <br>
+>>> xxx.json <br>
+>>> abc.json <br>
+>>> de.json <br>
+* json文件的格式为:
+> list.json
+```
+{
+  "status": 200,
+  "data": [
+    "head.json",
+    "xx.json",
+    "xxx.json"
+  ]
+}
+```
+> 这样在加载的时候，学案第一页返回head.json和xx.json，第二页返回xxx.json，第三页返回data留空的json (上面定义过的) <br>
+
+> hidden.json
+```
+{
+  "status": 200,
+  "data": {
+    "files": [
+      "../xx",
+      "../xxx",
+      "abc.json",
+      "de.json"
+    ],
+    "keywords": [
+      "某科学的超电磁炮",
+      "路人女主的养成方法",
+      "缘之空",
+      "最近，我的妹妹有点奇怪？"
+    ]
+  }
+}
+```
+> 其中files定义的是json文件，keywords定义的是关键词，只要搜索的关键词在keywords里面，就会获取其在列表里面的位置，并且获取files列表相同位置的值作为json文件<br>
+> 值得注意的是，本文件中的json文件地址不需要加上json后缀名
+
+> 其他json：
+>> head.json
+```
+{
+  "status": 200,
+  "data": [
+    {
+      "name": "资源列表",
+      "date": "1616367600000",
+      "type": "文档",
+      "pic": null,
+      "doctype": "pdf",
+      "data": [
+        {
+          "title": "及 更新日志",
+          "url": "http://fs.yixuexiao.cn/list/210322.pdf",
+          "docid": "0.1014"
+        }
+      ]
+    },
+    {
+      "name": "有bug或下载问题请反馈至",
+      "date": "1612213200000",
+      "type": "Notice",
+      "pic": null,
+      "doctype": "png",
+      "data": [
+        {
+          "title": "example@gmail.com",
+          "url": "http://fs.yixuexiao.cn/a.png",
+          "docid": "0.0002"
+        }
+      ]
+    }
+  ]
+}
+```
+>> xx.json
+```
+{
+  "status": 200,
+  "data": [
+    {
+      "name": "某科学的超电磁炮",
+      "date": "1254412800000",
+      "type": "动漫",
+      "pic": "http://fs.yixuexiao.cn/videos/chaopao/chaopao/cover.jpg",
+      "doctype":"mp4",
+      "data": [
+        {
+          "title": "第1话 电击使ElectroMaster",
+          "url": "http://fs.yixuexiao.cn/videos/chaopao/chaopao/01.mp4",
+          "docid": "3.101"
+        },
+        {
+          "title": "第2话 炎日下工作必须补充水分",
+          "url": "http://fs.yixuexiao.cn/videos/chaopao/chaopao/02.mp4",
+          "docid": "3.102"
+        },
+        {
+          "title": "第3话 被盯上的常盘台",
+          "url": "http://fs.yixuexiao.cn/videos/chaopao/chaopao/03.mp4",
+          "docid": "3.103"
+        }
+      ]
+    }
+  ]
+}
+```
+> 由于代码中是遍历data中的每一个数据，因此自定义性得到了保证。<br>
+> <b>注意</b>：docid是判断文档是否下载的唯一依据，假设有两个不同的文件的docid都是abcde，那么下载完其中一个时，另一个也会显示下载完成。因此为了便于区分，建议使用小数点分隔数字的方式或者干脆使用uuid
+> 最终合成文件名的方式为name+' '+title
