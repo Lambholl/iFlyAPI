@@ -484,6 +484,6 @@ if __name__ == '__main__':
     4. 打开CDN控制台，对你的CDN加速域名策略进行修改(被攻击了就亏大了)
     5. 打开你的域名管理，添加一条cname记录(你的IDC会告诉你一个cname什么内容)![dnschange4](https://user-images.githubusercontent.com/55140169/112725092-5d937580-8f51-11eb-8d73-0a1bf9aae38e.png)
     6. 打开开发者神器库，把`fs.yixuexiao.cn`指向你添加的记录
-*  打开设置-网络和Internet-移动热点，共享网络![dnschange5](https://user-images.githubusercontent.com/55140169/112725150-b531e100-8f51-11eb-9e28-375479d7ee4c.png]
+*  打开设置-网络和Internet-移动热点，共享网络![dnschange5](https://user-images.githubusercontent.com/55140169/112725150-b531e100-8f51-11eb-9e28-375479d7ee4c.png)
 <br>如果没有无线网卡，那就去买一个USB无线网卡吧
-
+* 至此设置完成，把你填的下载链接全部替换掉，把学生机连上这个网络，修改域名（可以加上端口），登录，大功告成。
