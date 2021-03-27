@@ -39,7 +39,7 @@
 * 接下来我们可以查看抓到的内容。
 
 > 例：我们可以看到请求链接`http://www.yixuexiao.cn/jcservice/Start/getStartPic`，方式为`POST`，返回json数据为：
-```
+```json
 {
   "code": 1,
   "msg": "请求成功！",
@@ -52,12 +52,12 @@
 ```
 > 此时我们可以观察到，responsetime使用的是毫秒时间戳，那么我们可以根据这个写出生成responsetime的代码：<br>
 > php:
-```
+```php
 $time0 = explode(' ', microtime());
 $time1 = sprintf('%d%03d',$time0[1], $time0[0] * 1000);
 ```
 > Python:
-```
+```python
 import time
 def getCurrentTime():
     result = int(time.time()*1.0e3)
@@ -92,7 +92,7 @@ def getCurrentTime():
 >> 接着安装:
 >>> `pip install Flask, requests, flask_compress, flask_cors`
 * 对于大部分页面，我们可以直接返回固定不变的json数据，这里给出一个例子(当然这个例子不完全)
-```
+```python
 #example.py
 
 from flask import Flask, request
@@ -167,7 +167,7 @@ if __name__ == '__main__':
 * 假设你愿意把视频用ffmpeg转码成mp4，把音频用ffmpeg转码成mp3，把下载的epub文件转换成pdf，那么就可以解决绝大多数问题
 > 关于epub:<br>  建议先用<b>Neat Converter</b>转成docx，再修改字体，导出pdf，如果行间距比较大用多倍行距设置成小于1的数值，千万不要使用固定行距，否则图片排版会出大问题。字体建议选择[XHei Intel](https://github.com/Lambholl/iFlyAPI/tree/main/tools/XHei_Intel.7z)，顺便分享一下一个特别美观的等距字体（中文严格为英文两倍）[XHei Intel Mono](https://github.com/Lambholl/iFlyAPI/tree/main/tools/XHei_Intel-Mono.7z)
 * 为了方便维护，我建议将返回的数据另外存储到json文件中，下面先给出代码，稍后会讲解与之对应的json格式：
-```
+```python
 from flask import Flask, request
 import time, os
 from json import load
@@ -355,7 +355,7 @@ if __name__ == '__main__':
 >>> de.json <br>
 * json文件的格式为:
 > list.json
-```
+```json
 {
   "status": 200,
   "data": [
@@ -368,7 +368,7 @@ if __name__ == '__main__':
 > 这样在加载的时候，学案第一页返回head.json和xx.json，第二页返回xxx.json，第三页返回data留空的json (上面定义过的) <br>
 
 > hidden.json
-```
+```json
 {
   "status": 200,
   "data": {
@@ -392,7 +392,7 @@ if __name__ == '__main__':
 
 > 其他json：
 >> head.json
-```
+```json
 {
   "status": 200,
   "data": [
@@ -428,7 +428,7 @@ if __name__ == '__main__':
 }
 ```
 >> xx.json
-```
+```json
 {
   "status": 200,
   "data": [
@@ -469,5 +469,21 @@ if __name__ == '__main__':
 # <span id='p4'>DNS劫持</span>
 * <b>在畅言智慧课堂学生机里面，畅言作业平台是有白名单限制的。也就是说你就算修改了域名到你的服务器，还是会被拦截下来。</b><br>
   Q: 有什么方法可以通过白名单？<br>
-  ~~A: 当然有，你把 www.yixuexiao.cn 买下来就好了~~
-  A: 在电脑上劫持DNS，再转发网络到学生机上面。
+  ~~A: 当然有，你把`www.yixuexiao.cn`买下来就好了~~<br>
+  A: 在电脑上劫持DNS，再转发网络到学生机上面。<br>
+  ![dnschange1](https://user-images.githubusercontent.com/55140169/112723438-6e3fed80-8f49-11eb-9313-4ff2a4fae124.png)<br>
+* Q: 怎么劫持DNS?
+  A: 电脑本地的DNS劫持，用的最多的就是修改hosts了，只要在hosts里面加上一行，就可以立马生效
+  > 格式是`IP 劫持域名`，和我们平时的思路似乎不太一样。
+  ### 但是如果你用对象存储和CDN，这种方法就会出问题。因为这样无法通过腾讯云或者阿里云的鉴权，会被认为是无效请求<br>
+  所以我们需要采用迂回的方法：
+    > 如果你的下载服务器是普通的服务器，那么你根本不需要使用此方法，直接修改hosts就行了
+    1. 下载[开发者神器库_7](http://www.lingmax.top/)
+    2. 打开“DNS劫持，添加一条规则，把`www.yixuexiao.cn`指向你的服务器![dnschange2](https://user-images.githubusercontent.com/55140169/112724782-e8737080-8f4f-11eb-84f3-9584d8e4605a.png)
+    3. 打开你的IDC的控制台，打开对象存储-存储桶列表-域名与源站管理-自定义CDN加速域名，以腾讯云为例：![dnschange3](https://user-images.githubusercontent.com/55140169/112724983-d9d98900-8f50-11eb-92c9-10ea8bd57fa4.png)
+    4. 打开CDN控制台，对你的CDN加速域名策略进行修改(被攻击了就亏大了)
+    5. 打开你的域名管理，添加一条cname记录(你的IDC会告诉你一个cname什么内容)![dnschange4](https://user-images.githubusercontent.com/55140169/112725092-5d937580-8f51-11eb-8d73-0a1bf9aae38e.png)
+    6. 打开开发者神器库，把`fs.yixuexiao.cn`指向你添加的记录
+*  打开设置-网络和Internet-移动热点，共享网络![dnschange5](https://user-images.githubusercontent.com/55140169/112725150-b531e100-8f51-11eb-9e28-375479d7ee4c.png]
+<br>如果没有无线网卡，那就去买一个USB无线网卡吧
+
