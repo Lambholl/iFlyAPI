@@ -5,6 +5,7 @@
 > ### [思路](#p1)
 > ### [准备工作](#p2)
 > ### [搭建api](#p3)
+> ### [DNS劫持](#p4)
 ******
 # <span id="p1">思路</span>
 通过网络抓包，我们可以发现畅言作业平台传输的数据基本上都是json格式。
@@ -17,7 +18,7 @@
 也就是说通过“修改域名”可以更改请求连接。
 >例：原本的请求链接是`http://www.yixuexiao.cn/jcservice/Login/clientLogin`，输入`http://api.example.com`并确认，请求的链接会变成`http://api.example.com/jcservice/Login/clientLogin`
 那么，如果我们搭建一个api服务器来模拟原来的服务器，就可以修改其中的内容。
-
+******
 # <span id="p2">准备工作</span>
 * 为了能够长期、稳定地运行api，我们需要一台服务器。
 * 如果没有服务器，可以暂时使用本地电脑来配置，但是我不推荐这种做法。
@@ -31,7 +32,7 @@
   > 我应该给服务器选择安装什么系统？
   >> 在服务器配置足够的情况下，我推荐你安装Windows Server，因为大多数人都熟悉Windows系统。同时，我推荐你使用Windows Server 2019，此版本和Windows 10的操作体验相似，并且拥有相对来说最完善的开发环境。如果你对Linux系统比较熟悉，那么你当然也可以选择Ubuntu 18.04或者CentOS 7。
 * 由于我们租到的服务器带宽有限，所以不适合提供文件下载功能，因此我们需要租借[阿里云](https://cn.aliyun.com/)或者[腾讯云](https://cloud.tencent.com/)的对象存储服务，同时为了节省经费，我建议开通CDN(内容分发网络)，并且将加速策略设置为“文件下载加速”。
-
+******
 # <span id="p3">搭建api</span>
 * 首先，我们需要对畅言作业平台进行抓包。抓包工具的话，iOS建议选择[Stream](https://apps.apple.com/cn/app/stream/id1312141691)，安卓建议选择[HttpCanary](https://github.com/Lambholl/iFlyAPI/blob/main/tools/HttpCanary.apk)。
 * 打开抓包工具，装好证书，开始抓包，然后用自己的账号登录畅言作业平台，尽量把每个页面都查看一遍，然后返回抓包工具，停止抓包。
@@ -68,7 +69,7 @@ def getCurrentTime():
 * 接下来的思路就简单了，我们可以使用php或者Flask来搭建这个api服务器。当然为了防止bug，返回的内容一定要写全了。
 > 那么应该如何选择用php或者python呢？
 >> 如果使用php，那么需要使用[Apache](https://www.apache.org/)、[NGINX](https://www.nginx.com/)或者[Java](https://www.java.com/)，因为IIS的CGI模块比较nt，apache建议对apache比较熟悉并且熟悉url重写的人使用（反正我搞的url重写没成功过，因为我比较菜），如果你会Java，那么它当然也是一个很好的选择。<br>
->> ## 看到这里，了解web搭建的小伙伴已经知道该怎么做了，那么你可以直接去看文章结尾了<br>
+>> ## 看到这里，了解web搭建的小伙伴已经知道该怎么做了，那么你可以直接去看[文章结尾](#p4)了<br>
 >> 对于还不会搭建的同学，或者想偷懒的同学，我推荐使用Python Flask
 
 ## Flask搭建思路
@@ -164,7 +165,7 @@ if __name__ == '__main__':
 > xls<br>
 > xlsx<br>
 * 假设你愿意把视频用ffmpeg转码成mp4，把音频用ffmpeg转码成mp3，把下载的epub文件转换成pdf，那么就可以解决绝大多数问题
-> 关于epub:<br>  建议先用<b>Neat Converter</b>转成docx，再修改字体，导出pdf，如果行间距比较大用多倍行距设置成小于1的数值，千万不要使用固定行距，否则图片排版会出大问题。字体建议选择[XHei Intel](https://github.com/Lambholl/iFlyAPI/tree/main/tools/XHei_Intel.7z)，顺便分享一下一个特别美观的等距字体（中文严格为英文两倍）[XHei Inrwl Mono](https://github.com/Lambholl/iFlyAPI/tree/main/tools/XHei_Intel-Mono.7z)
+> 关于epub:<br>  建议先用<b>Neat Converter</b>转成docx，再修改字体，导出pdf，如果行间距比较大用多倍行距设置成小于1的数值，千万不要使用固定行距，否则图片排版会出大问题。字体建议选择[XHei Intel](https://github.com/Lambholl/iFlyAPI/tree/main/tools/XHei_Intel.7z)，顺便分享一下一个特别美观的等距字体（中文严格为英文两倍）[XHei Intel Mono](https://github.com/Lambholl/iFlyAPI/tree/main/tools/XHei_Intel-Mono.7z)
 * 为了方便维护，我建议将返回的数据另外存储到json文件中，下面先给出代码，稍后会讲解与之对应的json格式：
 ```
 from flask import Flask, request
@@ -459,5 +460,14 @@ if __name__ == '__main__':
 }
 ```
 > 由于代码中是遍历data中的每一个数据，因此自定义性得到了保证。<br>
-> <b>注意</b>：docid是判断文档是否下载的唯一依据，假设有两个不同的文件的docid都是abcde，那么下载完其中一个时，另一个也会显示下载完成。因此为了便于区分，建议使用小数点分隔数字的方式或者干脆使用uuid
+> <b>注意</b>：docid是判断文档是否下载的唯一依据，假设有两个不同的文件的docid都是abcde，下载完其中一个时，另一个也会显示下载完成。因此为了便于区分，建议使用小数点分隔数字的方式或者干脆使用uuid<br>
 > 最终合成文件名的方式为name+' '+title
+
+* 这里我给出一个写好的py脚本以供参考:
+   [iFlyAPI.py](https://github.com/Lambholl/iFlyAPI/blob/main/iFlyAPI.py)
+******
+# <span id='p4'>DNS劫持</span>
+* <b>在畅言智慧课堂学生机里面，畅言作业平台是有白名单限制的。也就是说你就算修改了域名到你的服务器，还是会被拦截下来。</b><br>
+  Q: 有什么方法可以通过白名单？<br>
+  ~~A: 当然有，你把 www.yixuexiao.cn 买下来就好了~~
+  A: 在电脑上劫持DNS，再转发网络到学生机上面。
