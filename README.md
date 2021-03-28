@@ -479,11 +479,11 @@ if __name__ == '__main__':
   所以我们需要采用迂回的方法：
     > 如果你的下载服务器是普通的服务器，那么你根本不需要使用此方法，直接修改hosts就行了
     1. 下载[开发者神器库_7](http://www.lingmax.top/)
-    2. 打开“DNS劫持，添加一条规则，把`www.yixuexiao.cn`指向你的服务器![dnschange2](https://user-images.githubusercontent.com/55140169/112724782-e8737080-8f4f-11eb-84f3-9584d8e4605a.png)
-    3. 打开你的IDC的控制台，打开对象存储-存储桶列表-域名与源站管理-自定义CDN加速域名，以腾讯云为例：![dnschange3](https://user-images.githubusercontent.com/55140169/112724983-d9d98900-8f50-11eb-92c9-10ea8bd57fa4.png)
-    4. 打开CDN控制台，对你的CDN加速域名策略进行修改(被攻击了就亏大了)
-    5. 打开你的域名管理，添加一条cname记录(你的IDC会告诉你一个cname什么内容)![dnschange4](https://user-images.githubusercontent.com/55140169/112725092-5d937580-8f51-11eb-8d73-0a1bf9aae38e.png)
-    6. 打开开发者神器库，把`fs.yixuexiao.cn`指向你添加的记录
+    2. 打开你的IDC的控制台，打开对象存储-存储桶列表-域名与源站管理-自定义CDN加速域名，以腾讯云为例：![dnschange3](https://user-images.githubusercontent.com/55140169/112724983-d9d98900-8f50-11eb-92c9-10ea8bd57fa4.png)
+    3. 打开CDN控制台，对你的CDN加速域名策略进行修改(被攻击了就亏大了)
+    4. 打开你的域名管理，添加一条cname记录(你的IDC会告诉你一个cname什么内容)![dnschange4](https://user-images.githubusercontent.com/55140169/112725092-5d937580-8f51-11eb-8d73-0a1bf9aae38e.png)
+    5. <span id='fin'>打开开发者神器库7，把`fs.yixuexiao.cn`指向你添加的记录</span>
+    6. 打开“DNS劫持，添加一条规则，把`www.yixuexiao.cn`指向你的服务器![dnschange2](https://user-images.githubusercontent.com/55140169/112724782-e8737080-8f4f-11eb-84f3-9584d8e4605a.png)
 *  打开设置-网络和Internet-移动热点，共享网络![dnschange5](https://user-images.githubusercontent.com/55140169/112725150-b531e100-8f51-11eb-9e28-375479d7ee4c.png)
 <br>如果没有无线网卡，那就去买一个USB无线网卡吧
 * 至此设置完成，把你填的下载链接全部替换掉，把学生机连上这个网络，修改域名（可以加上端口），登录，大功告成。
