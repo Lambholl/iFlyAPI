@@ -340,7 +340,7 @@ if __name__ == '__main__':
 * ### 接下来讲解本地json的格式
 > 举例: <br>存放json的文件夹的结构为:
 >> list.json    - 列出所有可以加载的json文件<br>
->> head.json    - 总是保持在学案顶部的json文件，方便用来发送公告类文件
+>> head.json    - 总是保持在学案顶部的json文件，方便用来发送公告类文件<br>
 >> xx.json      - 在list.json中列出的文件名<br>
 >> xxx.json <br>
 >> hidden       - 定义隐藏文件和搜索功能的文件夹<br>
