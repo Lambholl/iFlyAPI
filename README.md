@@ -170,7 +170,7 @@ if __name__ == '__main__':
 ```python
 from flask import Flask, request
 import time, os
-from json import load
+from json import load, loads
 from flask_compress import Compress
 from collections import OrderedDict
 from flask_cors import *
