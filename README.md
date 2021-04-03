@@ -221,84 +221,25 @@ def listStuClassDoc():
     resList = getJsonData('list.json')
     # 下面的代码看着有点臃肿，但是我暂时也想不出更好的方法了(其实是懒得想)
     # 要用在线json的话修改注释就好了
-    try:
-        keyword = request.form['keyword']
-        #keyword = 'rzxyuan'
-        if keyword != '':
-            try:
-                page = int(request.form['page'])
-                #page=1
-                if page != 1:
-                    #lode_json_url = []
-                    lode_json_file = []
-                else: 
-                    #url2 = JSON_URL_HEAD+'hidden/hidden.json'
-                    #hiddenResList = loads(get(url2).text)
-                    hiddenResList = getJsonData('hidden/hidden.json')
-                    for kwName in hiddenResList["data"]["keywords"]:
-                        resFound = True if keyword == kwName else False
-                        if resFound:
-                            resNum = hiddenResList["data"]["keywords"].index(keyword)
-                            resFile = hiddenResList["data"]["files"][resNum]
-                            #lode_json_url = [JSON_URL_HEAD+"hidden/"+resFile+".json"]
-                            lode_json_file = ["hidden/"+resFile+".json"]
-                            break
-                    #lode_json_url = [] if not resFound else lode_json_url
-                    lode_json_file = [] if not resFound else lode_json_file
-            except KeyError:
-                #url2 = JSON_URL_HEAD+'hidden/hidden.json'
-                #hiddenResList = loads(get(url2).text)
-                hiddenResList = getJsonData('hidden/hidden.json')
-                for kwName in hiddenResList["data"]["keywords"]:
-                    resFound = True if keyword == kwName else False
-                    if resFound:
-                        resNum = hiddenRes["data"]["keywords"].index(keyword)
-                        resFile = hiddenResList["data"]["files"][resNum]
-                        #lode_json_url = [JSON_URL_HEAD+"hidden/"+resnFile+".json"]
-                        lode_json_file = ["hidden/"+resnFile+".json"]
-                        break
-                #lode_json_url = [] if not resFound else lode_json_url
-                lode_json_file = [] if not resFound else lode_json_file
+    if 'keyword' in request.form:
+        if request.form['page'] == 1 and request.form['keyword']!='':
+            keyword = request.form['keyword']
+            kws = getJsonData('hidden/hidden.json')
+            lode_json_file = [JSON_PATH+'hidden/'+kws['files'][kws['keywords'].index(keyword)]+'.json'] if keyword in kws['keywords'] else []
+            # lode_json_url = [JSON_URL_HEAD+'hidden/'+kws['files'][kws['keywords'].index(keyword)]+'.json'] if keyword in kws['keywords'] else []
         else:
-            try:
-                page = int(request.form['page'])
-            except KeyError:
-                page = 1
-            if page <= 1:
-                # lode_json_url = [
-                    # JSON_URL_HEAD+resList["data"][0],
-                    # JSON_URL_HEAD+resList["data"][1]
-                # ]
-                lode_json_file = [
-                    resList["data"][0],
-                    resList["data"][1]
-                ]
-            elif page >= len(resList["data"]):
-                #lode_json_url = []
-                lode_json_file = []
-            else:
-                #lode_json_url = [JSON_URL_HEAD+resList["data"][page]]
-                lode_json_file = [resList["data"][page]]
-    except KeyError:
-        try:
-            page = int(request.form['page'])
-        except KeyError:
-            page = 1
-        if page <= 1:
-            # lode_json_url = [
-                # JSON_URL_HEAD+resList["data"][0],
-                # JSON_URL_HEAD+resList["data"][1]
-            # ]
-            lode_json_file = [
-                    resList["data"][0],
-                    resList["data"][1]
-                ]
-        elif page >= len(resList["data"]):
-            #lode_json_url = []
             lode_json_file = []
+            # lode_json_url = []
+    else:
+        page = int(request.form['page']) if 'page' in request.form else 1
+        fileList = getJsonData(JSON_PATH+'list.json')['data']
+        # fileList = loads(get(JSON_URL_HEAD+'list.json').text)['data']
+        if page < len(fileList):
+            lode_json_file = [JSON_PATH+fileList[0], JSON_PATH+fileList[1]] if page==1 else [JSON_PATH+fileList[page]]
+            # lode_json_url = [JSON_URL_HEAD+fileList[0], JSON_URL_HEAD+fileList[1]] if page==1 else [JSON_URL_HEAD+fileList[page]]
         else:
-            #lode_json_url = [JSON_URL_HEAD+resList["data"][page]]
-            lode_json_file = [resList["data"][page]]
+            lode_json_file = []
+            # lode_json_url = []
     # for url3 in lode_json_url:
         # jsonFile = loads(get(url3).text)
     for path in lode_json_file:
