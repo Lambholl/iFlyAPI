@@ -21,7 +21,7 @@
 ******
 # <span id="p2">准备工作</span>
 * 为了能够长期、稳定地运行api，我们需要一台服务器。
-* 如果没有服务器，可以暂时使用本地电脑来配置，但是我不推荐这种做法。
+* 如果没有服务器，可以暂时使用本地电脑来配置，但是我不推荐这种做法。<b>如果你想要用这种方法，请查看[具体思路](#p5_1)。
 * 以下问题解答提供给新手：
   > 在哪里能租到服务器?
   >> 在资金充裕的情况下，我建议你选择大型IDC，如[阿里云](https://cn.aliyun.com/)、[腾讯云](https://cloud.tencent.com/)。你可以选择使用学生优惠租借轻量级应用服务器，那是这两家服务商提供的最优惠的方案。当然，你也可以选择华为云、旋律云这类次一级的服务商，他们不提供独立ip，因此只能提供给你几个特定的端口，但是对于这个用途来说，那些端口是足够使用的，而且他们从整体来说更优惠。
@@ -428,3 +428,20 @@ if __name__ == '__main__':
 *  打开设置-网络和Internet-移动热点，共享网络![dnschange5](https://user-images.githubusercontent.com/55140169/112725150-b531e100-8f51-11eb-9e28-375479d7ee4c.png)
 <br>如果没有无线网卡，那就去买一个USB无线网卡吧
 * 至此设置完成，把你填的下载链接全部替换掉，把学生机连上这个网络，修改域名（可以加上端口），登录，大功告成。
+
+
+# 附录
+## <span id='p5_1'>利用本地电脑搭建api服务器方法</span>
+* 不是很推荐这种方法，当然如果你只是想临时用一下，就按照下面的方法来吧。<br><br>
+* 因为只是临时用一下，下载服务器就放在本地好了；
+> 因此劫持域名只需劫持一个，且不需要用到开发者神器库，只需修改`C:\Windows\System32\drivers\etc\hosts`就好了。<br>
+> 修改建议使用[NotePad++](https://github.com/Lambholl/iFlyAPI/blob/main/tools/npp.7.9.5.Installer.x64.exe)，以管理员身份运行，不建议使用Windows自带记事本，当然如果你一定要用，请以管理员身份运行。<br>
+* 在电脑上共享WiFi：
+> ![dnschange5](https://user-images.githubusercontent.com/55140169/112725150-b531e100-8f51-11eb-9e28-375479d7ee4c.png)<br>
+> 如果没有无线网卡，买个USB无线网卡凑合一下吧
+* 用手机或者平板连上这个WiFi，打开WiFi详细信息，查看“路由器”的地址 
+> ![dnschange6](https://user-images.githubusercontent.com/55140169/113497642-9c6c9100-9538-11eb-974a-c928986e8ba0.png)
+* 在随便哪里加上一行 `“路由器”中显示的ip 空格 www.yixuexiao.cn`
+> ![image](https://user-images.githubusercontent.com/55140169/113497680-dd64a580-9538-11eb-9e1c-c256b90eed97.png)
+* 按照上面的方法运行iFlyAPI.py，当然里面的几项参数得自己修改，如果你嫌listStuClassDoc麻烦，可以直接定义一个`dict`，里面包含返回的数据，再直接`return`即可，参考别的几个函数。
+* 下载服务器可以用`Flask`，具体函数写法请百度；当然也可以用`IIS`，毕竟比较方便。
