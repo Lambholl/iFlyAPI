@@ -445,3 +445,5 @@ if __name__ == '__main__':
 > ![image](https://user-images.githubusercontent.com/55140169/113497680-dd64a580-9538-11eb-9e1c-c256b90eed97.png)
 * 按照上面的方法运行iFlyAPI.py，当然里面的几项参数得自己修改，如果你嫌listStuClassDoc麻烦，可以直接定义一个`dict`，里面包含返回的数据，再直接`return`即可，参考别的几个函数。
 * 下载服务器可以用`Flask`，具体函数写法请百度；当然也可以用`IIS`，毕竟比较方便。
+
+# 如果还有什么疑问，可以在B站私聊我：[Lambholl](https://space.bilibili.com/32319246)，我会尽快回答
