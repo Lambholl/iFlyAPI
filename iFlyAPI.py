@@ -48,7 +48,7 @@ def listStuClassDoc():
         # page=request.form['page']
     # except KeyError:
         # page=1
-    # json_data = loads(post('http://127.0.0.1:30387/jcservice/courseware/listStuClassDoc', data={'page':page,'keyword':kw}).text)
+    # json_data = post('http://127.0.0.1:30387/jcservice/courseware/listStuClassDoc', data={'page':page,'keyword':kw}).json()
     json_data = {
         'code': 1,
         'msg': '请求成功！',
@@ -67,7 +67,7 @@ def listStuClassDoc():
     else:
         page = int(request.form['page']) if 'page' in request.form else 1
         fileList = getJsonData(JSON_PATH+'list.json')['data']
-        # fileList = loads(get(JSON_URL_HEAD+'list.json').text)['data']
+        # fileList = get(JSON_URL_HEAD+'list.json').json()['data']
         if page < len(fileList):
             lode_json_file = [JSON_PATH+fileList[0], JSON_PATH+fileList[1]] if page==1 else [JSON_PATH+fileList[page]]
             # lode_json_url = [JSON_URL_HEAD+fileList[0], JSON_URL_HEAD+fileList[1]] if page==1 else [JSON_URL_HEAD+fileList[page]]
@@ -76,7 +76,7 @@ def listStuClassDoc():
             # lode_json_url = []
         
     # for url3 in lode_json_url:
-        # jsonFile = loads(get(url3).text)
+        # jsonFile = get(url3).json()
     for path in lode_json_file:
         jsonFile = getJsonData(path)
         i = 0
