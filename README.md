@@ -206,7 +206,7 @@ def listStuClassDoc():
         # page=request.form['page']
     # except KeyError:
         # page=1
-    # json_data = loads(post('http://127.0.0.1:30387/jcservice/courseware/listStuClassDoc', data={'page':page,'keyword':kw}).text)
+    # json_data = post('http://127.0.0.1:30387/jcservice/courseware/listStuClassDoc', data={'page':page,'keyword':kw}).json()
     # 以上这几行是提供转发本地php服务器返回结果的方法，因为php的运行速率要永远大于python，所有有兴趣的可以试试看，但是这种方法不推荐
     json_data = {
         'code': 1,
@@ -216,7 +216,7 @@ def listStuClassDoc():
     }
     # 定义未找到结果时返回的json，不至于报错
     # url1 = JSON_URL_HEAD+'list.json'
-    # resList = loads(get(url1).text)
+    # resList = get(url1).json()
     # 上面这几行就是在线json文件的代码了，把注释去掉，再把下面那行注释掉就好了
     resList = getJsonData('list.json')
     # 下面的代码看着有点臃肿，但是我暂时也想不出更好的方法了(其实是懒得想)
@@ -233,7 +233,7 @@ def listStuClassDoc():
     else:
         page = int(request.form['page']) if 'page' in request.form else 1
         fileList = getJsonData(JSON_PATH+'list.json')['data']
-        # fileList = loads(get(JSON_URL_HEAD+'list.json').text)['data']
+        # fileList = get(JSON_URL_HEAD+'list.json').json()['data']
         if page < len(fileList):
             lode_json_file = [JSON_PATH+fileList[0], JSON_PATH+fileList[1]] if page==1 else [JSON_PATH+fileList[page]]
             # lode_json_url = [JSON_URL_HEAD+fileList[0], JSON_URL_HEAD+fileList[1]] if page==1 else [JSON_URL_HEAD+fileList[page]]
@@ -241,7 +241,7 @@ def listStuClassDoc():
             lode_json_file = []
             # lode_json_url = []
     # for url3 in lode_json_url:
-        # jsonFile = loads(get(url3).text)
+        # jsonFile = get(url3).json()
     for path in lode_json_file:
         jsonFile = getJsonData(path)
         i = 0
